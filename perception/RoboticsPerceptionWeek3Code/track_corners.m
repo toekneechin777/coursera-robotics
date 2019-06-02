@@ -9,19 +9,26 @@ function [ corners ] = track_corners(images, img_pts_init)
 % Outputs:
 %     corners - size (4 x 2 x N) array of where the corners are tracked to
 
+
 corners = zeros(4,2,size(images,1));
 
 %%%% INITIALIZATION CODE FOR TRACKER HERE %%%%
+tracker = vision.PointTracker('MaxBidirectionalError', 1);
+
 
 img_pts = img_pts_init; % img_pts is where you will store the tracked points
 corners(:,:,1) = img_pts;
 
+initialize(tracker, img_pts_init, cell2mat(images(1)));
 % Iterate through the rest of the images
 for i = 2:size(images,1)
     %%%% CODE FOR TRACKING HERE %%%%
     % Store corners and visualize results (if desired)
+    [img_pts, validity] = step(tracker, cell2mat(images(i)));
+    
     corners(:,:,i) = img_pts;
 end
+
 
 end
 
